@@ -4,6 +4,8 @@ import com.lab.CodeFellowship.Models.AppUser;
 import com.lab.CodeFellowship.Models.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface PostRepository extends JpaRepository<Post,Long> {
-    Post findByAppUser(AppUser appUser);
+    List<Post> findByAppUser(AppUser appUser);
 }

@@ -64,8 +64,8 @@
 </div>
 
     <div class="card" >
-        <ul th:each="user: ${userList}">
-            <li class="list-group-item"><span th:text="${user.posts}"></span></li>
+        <ul th:each="post: ${PostList2}">
+            <li class="list-group-item"><span th:text="${post.body}"></span></li>
         </ul>
     </div>
 </div>

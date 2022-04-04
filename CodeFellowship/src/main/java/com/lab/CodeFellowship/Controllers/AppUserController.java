@@ -40,7 +40,13 @@ public class AppUserController {
     @GetMapping("/")
     public String getHomePage(@RequestParam String username,Model model){
         model.addAttribute("userList", appUserRepository.findByUsername(username));
-        model.addAttribute("PostList",postRepository.findAll());
+//        model.addAttribute("PostList",postRepository.findAll());
+
+        AppUser appUser = appUserRepository.findByUsername(username);
+
+        List<Post> posts= postRepository.findByAppUser(appUser);
+
+        model.addAttribute("PostList2",posts);
 
         return "home";
     }
@@ -48,7 +54,11 @@ public class AppUserController {
     @PostMapping("/")
     public String homePage(@RequestParam String username,Model model){
         model.addAttribute("userList", appUserRepository.findByUsername(username));
-        model.addAttribute("PostList",postRepository.findAll());
+        AppUser appUser = appUserRepository.findByUsername(username);
+
+        List<Post> posts= postRepository.findByAppUser(appUser);
+
+      model.addAttribute("PostList2",posts);
 
         return "home";
     }
