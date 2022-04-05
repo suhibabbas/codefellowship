@@ -53,6 +53,10 @@ public class AppUser implements UserDetails {
 
     }
 
+    @OneToOne//(cascade = CascadeType.ALL)
+    @JoinColumn(name ="role_id", referencedColumnName = "id")
+    private Role role;
+
     public String getFirstname() {
         return firstname;
     }
