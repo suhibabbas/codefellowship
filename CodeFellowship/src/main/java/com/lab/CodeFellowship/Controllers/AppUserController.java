@@ -5,16 +5,20 @@ import com.lab.CodeFellowship.Models.Post;
 import com.lab.CodeFellowship.Repositries.AppUserRepository;
 import com.lab.CodeFellowship.Repositries.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.xml.transform.sax.SAXResult;
+import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 
@@ -37,31 +41,36 @@ public class AppUserController {
         return "login";
     }
 
+//    @GetMapping("/")
+//    public String getHomePage(@RequestParam String username,Model model){
+//        model.addAttribute("userList", appUserRepository.findByUsername(username));
+//        AppUser appUser = appUserRepository.findByUsername(username);
+//        List<Post> posts= postRepository.findByAppUser(appUser);
+//        model.addAttribute("PostList2",posts);
+//        return "home";
+//    }
+
     @GetMapping("/")
-    public String getHomePage(@RequestParam String username,Model model){
+    public String getHomePage(Model model){
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = userDetails.getUsername();
         model.addAttribute("userList", appUserRepository.findByUsername(username));
-//        model.addAttribute("PostList",postRepository.findAll());
-
         AppUser appUser = appUserRepository.findByUsername(username);
-
         List<Post> posts= postRepository.findByAppUser(appUser);
-
         model.addAttribute("PostList2",posts);
-
         return "home";
     }
 
-    @PostMapping("/")
-    public String homePage(@RequestParam String username,Model model){
-        model.addAttribute("userList", appUserRepository.findByUsername(username));
-        AppUser appUser = appUserRepository.findByUsername(username);
 
-        List<Post> posts= postRepository.findByAppUser(appUser);
+//    @PostMapping("/")
+//    public String homePage(@RequestParam String username,Model model){
+//        model.addAttribute("userList", appUserRepository.findByUsername(username));
+//        AppUser appUser = appUserRepository.findByUsername(username);
+//        List<Post> posts= postRepository.findByAppUser(appUser);
+//        model.addAttribute("PostList2",posts);
+//        return "home";
+//    }
 
-      model.addAttribute("PostList2",posts);
-
-        return "home";
-    }
 
     @GetMapping("/logout")
     public String logoutPage(){

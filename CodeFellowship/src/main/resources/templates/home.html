@@ -24,7 +24,7 @@
             </li>
 
         </ul>
-        <form class="form-inline my-2 my-lg-0" action="/logout" method="post">
+        <form class="form-inline my-2 my-lg-0" action="perform_logout" method="post">
 
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
         </form>
@@ -65,7 +65,9 @@
 
     <div class="card" >
         <ul th:each="post: ${PostList2}">
+            <label for="exampleFormControlTextarea1"><span th:text="${post.localTime}"></span></label>
             <li class="list-group-item"><span th:text="${post.body}"></span></li>
+<!--            <li class="list-group-item"><span th:text="${post.localTime}"></span></li>-->
         </ul>
     </div>
 </div>

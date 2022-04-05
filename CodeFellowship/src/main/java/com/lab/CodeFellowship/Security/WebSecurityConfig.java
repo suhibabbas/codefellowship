@@ -7,8 +7,10 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 @Configuration
 @EnableWebSecurity
@@ -21,30 +23,53 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         return bCryptPasswordEncoder;
     }
+    @Bean
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
+    }
 
     @Override
     protected void configure(final AuthenticationManagerBuilder authManagerBuilder) throws Exception {
         authManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .cors().disable()
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/login*").permitAll()
-                .antMatchers("/signup*").permitAll()
-                .antMatchers("/post*").permitAll()
-                .antMatchers("/").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin()
-                .loginPage("/login")
-                .defaultSuccessUrl("/")
-                .and()
-                .logout()
-                .logoutSuccessUrl("/login");
-
-    }
+//    @Override
+//    protected void configure(HttpSecurity http) throws Exception {
+//        http
+//                .cors().disable()
+//                .csrf().disable()
+//                .authorizeRequests()
+//                .antMatchers("/login").permitAll()
+//                .antMatchers("/signup").permitAll()
+//                .anyRequest().authenticated()
+//                .and()
+//                .formLogin()
+//                .loginPage("/login")
+//                .defaultSuccessUrl("/",true)
+//                .permitAll()
+//                .and()
+//                .logout()
+//                .logoutSuccessUrl("/login")
+//                .permitAll();
+//
+//    }
+@Override
+protected void configure(HttpSecurity http) throws Exception {
+    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+            .disable()
+            .csrf().disable()
+            .authorizeRequests()
+            .antMatchers("/login", "/signup").permitAll()
+            .anyRequest().authenticated()
+            .and()
+            .formLogin()
+            .loginPage("/login")
+            .loginProcessingUrl("/perform_login")
+            .defaultSuccessUrl("/", true)
+            .failureUrl("/error")
+            .and()
+            .logout()
+            .logoutUrl("/perform_logout")
+            .deleteCookies("JSESSIONID");
+}
 }

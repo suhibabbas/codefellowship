@@ -1,6 +1,7 @@
 package com.lab.CodeFellowship.Models;
 
 import javax.persistence.*;
+import java.time.LocalTime;
 
 @Entity
 public class Post {
@@ -11,9 +12,18 @@ public class Post {
     @Column(name = "id", nullable = false)
     private Long id;
     private String body;
+    private LocalTime localTime = LocalTime.now();
 
     public Post(String body) {
         this.body = body;
+    }
+
+    public LocalTime getLocalTime() {
+        return localTime;
+    }
+
+    public void setLocalTime(LocalTime localTime) {
+        this.localTime = localTime;
     }
 
     public String getBody() {
